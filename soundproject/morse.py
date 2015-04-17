@@ -1,5 +1,4 @@
 import wave
-import random
 import struct
 import math
 import argparse
