@@ -53,9 +53,9 @@ To find out about more options:
 python morse.py -h
 ```
 
-# Packages
+# Modules Used
 
-The code in this project uses the following special Python packages:
+The code in this project uses the following special Python modules:
 
 ```sh
 argparse, wave, struct, alsaaudio
