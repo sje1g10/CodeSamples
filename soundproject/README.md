@@ -52,3 +52,13 @@ To find out about more options:
 ```sh
 python morse.py -h
 ```
+
+# Packages
+
+The code in this project uses the following special Python packages:
+
+```sh
+argparse, wave, struct, alsaaudio
+```
+
+The code was written and tested using Python 2.7.6.
