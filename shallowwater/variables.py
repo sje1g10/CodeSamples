@@ -10,10 +10,8 @@ HV_X = 1
 HV_Y = 2
 
 # Auxiliary Variables
-NAUXL = 3
+NAUXL = 1
 HH   = 0
-BED  = 1
-DBED = 2
 
 # Other Parameters
 GRAVITY = 9.8

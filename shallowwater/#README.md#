@@ -1,0 +1,54 @@
+shallowwater
+============
+
+
+
+# Instructions
+
+To run the Morse Code transmission:
+
+```sh
+python continuous_input.py
+```
+
+To write the Morse Code transmission to a .wav file:
+
+```sh
+python continuous_input.py -w 1
+```
+
+To learn about more options:
+
+```sh
+python continuous_input.py -h
+```
+
+It is also possible to run the morse.py script directly on a string
+input. For example, the following will play a Morse Code transmission
+of "Hello World":
+
+```sh
+python morse.py "Hello World"
+```
+
+To write this to a file, test.wav, instead, use the following command:
+
+```sh
+python morse.py "Hello World" -f test.wav -w 1
+```
+
+To find out about more options:
+
+```sh
+python morse.py -h
+```
+
+# Modules Used
+
+The code in this project uses the following special Python modules:
+
+```sh
+argparse, wave, struct, alsaaudio
+```
+
+The code was written and tested using Python 2.7.6.

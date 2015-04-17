@@ -10,17 +10,15 @@ def setInitialValues(initial_data, xmin, xmax, dx):
     inds = np.arange(-GZ, NPX+GZ, 1)
     x = xmin + dx * (inds + 0.5)
     prim  = np.zeros((NPRIM, len(x)))
-    bed   = np.zeros((len(x)))
-    d_bed = np.zeros((len(x)))
 
     for i in range(len(x)):
         
-        prim[:, i], bed[i], d_bed[i] = initial_type(prim[:, i], x[i])
+        prim[:, i] = initial_type(prim[:, i], x[i])
 
     cons = prim2cons(prim)
-    auxl = prim2auxl(prim, bed, d_bed)
+    auxl = prim2auxl(prim)
 
-    return x, prim, cons, auxl, bed, d_bed
+    return x, prim, cons, auxl
 
 def dam_break(prim, x):
 
@@ -32,7 +30,7 @@ def dam_break(prim, x):
     prim[V_X] = 0.0        
     prim[V_Y] = 0.0        
 
-    return prim, 0.0, 0.0
+    return prim
 
 def wave(prim, x):
     
@@ -43,21 +41,7 @@ def wave(prim, x):
     prim[V_X] = 0.0
     prim[V_Y] = 0.0
 
-    return prim, 0.0, 0.0
-
-def shore(prim, x):
-    
-    xcenter = 0.0
-    width   = 0.1
-
-    bed = 5.0 * np.sqrt(x - XMIN + DX * GZ)
-    d_bed = 5.0 * 0.5 / np.sqrt(x - XMIN + DX * GZ)
-
-    prim[H]   = 0.1 * np.exp(-(x-xcenter)**2 / (2.0 * width**2)) + 10.0 + bed
-    prim[V_X] = 0.0
-    prim[V_Y] = 0.0
-
-    return prim, bed, d_bed
+    return prim
 
 def select_input(initial_data):
 
@@ -65,7 +49,6 @@ def select_input(initial_data):
     input_mapping = {
         'dam_break' : dam_break,
         'wave'      : wave,
-        'shore'     : shore,
     }
 
     try:

@@ -11,21 +11,21 @@ def main():
     t = 0.0
     t_last_out = 0.0
 
-    x, prim, cons, auxl, bed, d_bed = setInitialValues('shore', XMIN, XMAX, DX)
+    x, prim, cons, auxl = setInitialValues('dam_break', XMIN, XMAX, DX)
     output_files(t, x, prim, cons, auxl, adding=False)
     rhs, info = calcRHS(prim, DX)
     output_info(t, x, info, adding=False)
 
     while t < TFINAL:
         # Assign dt from maximum characteristic speed
-        lam = calcMaxLam(prim, bed)
+        lam = calcMaxLam(prim)
         dt = RC * DX / lam
 
         # Make sure output timesteps are as specified
         if (t + dt > t_last_out + TOUT):
             dt = t_last_out + TOUT - t
 
-        prim, cons, auxl, info = evolve(prim, DX, dt, bed, d_bed)
+        prim, cons, auxl, info = evolve(prim, DX, dt)
 
         n = n + 1
         t = t + dt

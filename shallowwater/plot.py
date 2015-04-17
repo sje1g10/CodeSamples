@@ -52,7 +52,7 @@ def main():
     n = int(TFINAL / TOUT) + 1
     for i in range(n):
         print "Loading index: ", i, "/", n
-        data = readfile(FILENAME, i)
+        data = readfile("prim.dat", i)
         print "Plotting..."
         myplot(outfile, i, data)
         print "Done with index: ", i, "/", n

@@ -3,13 +3,9 @@ from variables import *
 from output import *
 from boundaries import *
 
-def evolve(prim, dx, dt, 
-           bed = np.zeros((NPX+2*GZ)), d_riverbed=np.zeros((NPX+2*GZ))):
+def evolve(prim, dx, dt):
 
-    rhs, info = calcRHS(prim, dx, bed)
-
-    source = calcSource(prim, bed, d_riverbed)
-    rhs = rhs + source
+    rhs, info = calcRHS(prim, dx)
 
     cons = prim2cons(prim)
     cons = update(cons, rhs, dt)
@@ -18,13 +14,13 @@ def evolve(prim, dx, dt,
     prim = boundaries(prim)
 
 # For analysis only
-    auxl = prim2auxl(prim, bed, d_riverbed)
+    auxl = prim2auxl(prim)
 
-# Hack for info/debug purposes
+# For info/debug purposes
     rhs, info = calcRHS(prim, dx)
     return prim, cons, auxl, info
 
-def calcRHS(prim, dx, bed = np.zeros((NPX+2*GZ))):
+def calcRHS(prim, dx):
     rhs = np.zeros((NPRIM, NPX+2*GZ))
     
     prim_l, prim_r = reconstruct(prim)
@@ -33,10 +29,10 @@ def calcRHS(prim, dx, bed = np.zeros((NPX+2*GZ))):
     cons_l = prim2cons(prim_l)
     cons_r = prim2cons(prim_r)
 
-    flux_l = calcFlux(prim_l, bed)
-    flux_r = calcFlux(prim_r, bed)
+    flux_l = calcFlux(prim_l)
+    flux_r = calcFlux(prim_r)
 
-    lam = calcMaxLam(prim, bed)
+    lam = calcMaxLam(prim)
 
     # Estimate flux at cell boundary using HLL approximate Riemann solver
     flux = HLL(cons_l, cons_r, flux_l, flux_r, lam)
@@ -67,11 +63,6 @@ def reconstruct(prim):
             # In prim_l and prim_r, the index > i-1/2: we assign as above
             #  so that prim_l[:, i] and prim_r[:, i] refer to the same cell edge
 
-    #output(0, XMIN + DX * (np.arange(-GZ, NPX+GZ) - 1.0), 
-    #       prim_l, 'prim_l.dat')
-    #output(0, XMIN + DX * (np.arange(-GZ, NPX+GZ) - 1.0), 
-    #       prim_r, 'prim_r.dat')
-
     return prim_l, prim_r
 
 def minmod(a, b):
@@ -85,11 +76,6 @@ def minmod(a, b):
 def HLL(cons_l, cons_r, flux_l, flux_r, lam):
     return (flux_r + flux_l + lam * (cons_r - cons_l)) / 2.0
 
-def calcSource(prim, bed, d_riverbed):
-    source = np.zeros((NPRIM, NPX+2*GZ))
-    source[HV_X, :] = GRAVITY * prim[H, :] * d_riverbed
-    return source
-
 # Simple forward-in-time differencing seems to produce relatively sharp results
 def update(cons, rhs, dt):
     
@@ -98,7 +84,7 @@ def update(cons, rhs, dt):
 
     return cons
 
-def calcFlux(prim, bed):
+def calcFlux(prim):
     flux = np.zeros((NPRIM, NPX+2*GZ))
 
 # In 1D, we only look at the flux in the x-direction
@@ -127,18 +113,16 @@ def cons2prim(cons):
     
     return prim
 
-def prim2auxl(prim, bed, dbed):
+def prim2auxl(prim):
     auxl = np.zeros((NAUXL, NPX+2*GZ))
     
-    auxl[HH,   :] = prim[H, :] - bed
-    auxl[BED,  :] = bed
-    auxl[DBED, :] = dbed
+    auxl[HH,   :] = prim[H, :]
 
     return auxl
 
-def calcMaxLam(prim, bed=np.zeros((NPX+2*GZ))):
+def calcMaxLam(prim):
 
-    cs = np.sqrt(GRAVITY * (prim[H, :] - bed))
+    cs = np.sqrt(GRAVITY * prim[H, :])
     lam1 = np.amax(abs(prim[V_X, :] + cs))    
     lam2 = np.amax(abs(prim[V_X, :] - cs))
     return max(lam1, lam2)
