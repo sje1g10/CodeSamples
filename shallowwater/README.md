@@ -1,64 +1,90 @@
-soundproject
+shallowwater
 ============
 
-One morning, my fellow PhD student and were at coffee when we got a
-fun idea for a project: why don't we try to make our computers talk to
-each other in Morse Code? In the end, this proved much more difficult
-than anticipated, but we did manage to transmit signals from my
-computer to his as long as we held the microphone within a few inches
-of the speaker. You can find the complete program [here](https://github.com/TheNursery/TheNurseryLibrary/tree/master/soundproject).
+For my thesis, I worked on a collaborative code that is not publicly
+available. The code was also quite large; I didn't think it would make
+a very good code sample. However, I wanted to make available a simple
+code showing the types of methods I used in my thesis code.
 
-Included here is just the transmission side of the project. You can
-type text into the command prompt, and the text is converted to
-audible Morse Code, which is either written to a .wav file or played
-out loud by the computer, depending on input parameters. 
+The project presented here evolves the shallow water equations for an
+initial, dam-break problem. The methods used here are not very
+advanced, but it gives a simple overview of how one might go about
+evolving a conservation-law system of partial differential equations.
+
 
 # Instructions
 
-To run the Morse Code transmission:
+It is possible to run the evolution code and the code to process the
+results all in one go using a shell script:
 
 ```sh
-python continuous_input.py
+./run_and_process.sh
 ```
 
-To write the Morse Code transmission to a .wav file:
+It may be necessary to first make the shell script executable:
 
 ```sh
-python continuous_input.py -w 1
+chmod 755 run_and_process.sh
 ```
 
-To learn about more options:
+You can also just run the evolution code:
 
 ```sh
-python continuous_input.py -h
+python run.py
 ```
 
-It is also possible to run the morse.py script directly on a string
-input. For example, the following will play a Morse Code transmission
-of "Hello World":
+Then you can do all of the processing in one go using the following
+shell script:
 
 ```sh
-python morse.py "Hello World"
+./process_results.sh
 ```
 
-To write this to a file, test.wav, instead, use the following command:
+Alternatively, you can run the plotting script independently. This
+just generates the individual frames of an animation of the results:
 
 ```sh
-python morse.py "Hello World" -f test.wav -w 1
+python plot.py
 ```
 
-To find out about more options:
+Then you'll need to compile the animation LaTeX file, which is best
+done using the following commands:
 
 ```sh
-python morse.py -h
+cd results/
+pdflatex results.tex
+mv results.pdf ../
+cd ../
 ```
+
+Regardless of method used, you'll need to view the results file using
+Adobe Reader in order to see the animation. Alternatively, the output
+(.dat) files containing the results of the simulation can be plotted
+directly in Gnuplot.
+
+To open Gnuplot:
+
+```sh
+gnuplot
+```
+
+Then, for example, to plot the height as a function of x for the first
+output time step:
+
+```sh
+plot 'prim.dat' u 1:2 i 1 w lp
+```
+
+More Gnuplot guidance is [here](http://people.duke.edu/~hpgavin/gnuplot.html).
 
 # Modules Used
 
 The code in this project uses the following special Python modules:
 
 ```sh
-argparse, wave, struct, alsaaudio
+numpy, scipy, matplotlib
 ```
 
 The code was written and tested using Python 2.7.6.
+
+In order to produce the results.pdf file, you'll need pdflatex installed.
