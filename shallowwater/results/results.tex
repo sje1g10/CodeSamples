@@ -1,0 +1,25 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+\usepackage{beamerthemeshadow}
+\usepackage{caption}
+\usepackage{tikz}
+\captionsetup{labelformat=empty,labelsep=none}
+\usecolortheme{lily}
+\usetheme{Dresden}
+
+\usepackage{animate}
+\definecolor{darkgreen}{rgb}{0,0.7,0.4}
+
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}\frametitle{Shallow Water Results}
+\begin{figure}
+  \animategraphics[height=0.75\textheight, trim=0pt 0pt 0pt 0pt, controls]
+                  {10}{../plot/plot}{000}{032}
+\end{figure}
+\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
